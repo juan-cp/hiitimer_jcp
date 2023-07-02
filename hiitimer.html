@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HIITimer by JCP</title>
+  <style>
+    /*  @font-face {
+      font-family: 'LCD Display';
+      src: url('DS-DIGII.ttf') format('truetype');
+      Agrega más formatos si es necesario para compatibilidad con navegadores
+      font-weight: normal;
+      font-style: normal;
+    } */
+    #titulo {
+      font-size: 90px;
+      color: yellow;
+      text-align: center;
+      font-weight: bold;
+      /*font-family: 'LCD Display';*/
+      margin: 20px;
+    }
+    #timer {
+      font-size: 250px;
+      color: #42FF33;
+      text-align: center;
+      font-weight: bold;
+      /*font-family: 'LCD Display';*/
+      margin: 20px;
+    }
+
+    #activity {
+      font-size: 90px;
+      color: #F933FF;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px;
+    }
+    #activity_next {
+      font-size: 70px;
+      color: #F933FF;
+      text-align: center;
+      margin: 20px;
+    }
+    #buttons {
+      text-align: center;
+      font-size: 150px;
+      margin: 20px;
+    }
+  
+    
+    }
+  </style>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body style="background-color:black;">
+
+  <div id="titulo"><svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="yellow" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
+  <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1z"/>
+</svg>   HIIT by JCP</div>
+  <div id="timer">00:00</div>
+  <div id="activity"></div>
+  <div id="activity_next"></div>
+  <br>
+  <div id="buttons">
+    <button id="playPauseButton" type="button" class="btn btn-info" style="font-size: 120px;">Play/Pause</button>
+  </div>
+
+  <script>
+    // Array de actividades
+
+    const activities_total = [
+  "Jumping Jacks",
+  "Push-ups",
+  "Squats",
+  "Lunges",
+  "Burpees",
+  "Mountain Climbers",
+  "High Knees",
+  "Plank",
+  "Sit-ups",
+  "Crunches",
+  "Russian Twists",
+  "Tricep Dips",
+  "Dumbbell Rows",
+  "Jump Squats",
+  "Box Jumps",
+  "Step-ups",
+  "Calf Raises",
+  "Hip Thrusts",
+  "Side Plank",
+  "Supermans",
+  "Bicycle Crunches",
+  "Flutter Kicks",
+  "Tricep Pushdowns",
+  "Leg Extensions",
+  "Chest Flyes",
+  "Front Raises",
+  "Skaters",
+  "Jump Rope",
+  "Plank Jacks",
+  "Reverse Lunges",
+  "Donkey Kicks",
+  "Fire Hydrants",
+  "Wall Sits",
+  "Russian Kettlebell Swings",
+  "Sumo Squats",
+  "Plyometric Lunges",
+  "Side Lunges",
+  "Tricep Kickbacks",
+  "Seated Rows",
+  "Glute Bridges",
+  "V-ups",
+  "Toe Touches",
+  "Side Plank Crunches",
+  "Seated Calf Raises",
+  "Inverted Rows",
+  "Split Squats",
+  "Bent Over Rows",
+  "Jumping Lunges",
+  "Tuck Jumps",
+  "Tricep Dips",
+  "Bicycle Crunches",
+  "Skaters",
+  "Russian Twists",
+  "Squat Jumps",
+
+  "Close Grip Push-ups",
+
+  "Pull-ups",
+  "Curtsy Lunges",
+  "Single Leg Glute Bridges",
+  "Plank Knee to Elbow",
+  "Oblique Crunches",
+  "Hanging Leg Raises",
+  "Reverse Crunches",
+  "Shoulder Taps",
+  "Decline Push-ups",
+  "Dumbbell Pullovers",
+  "Jumping Jack Planks",
+  "Step-ups with Knee Raise",
+  "Hip Abductions",
+  "Cable Chest Flyes",
+  "Dumbbell Lateral Raises",
+  "Side Shuffle",
+  "Battle Rope Slams",
+  "Kettlebell Goblet Squats",
+  "Cable Rows",
+  "Glute Kickbacks",
+  "Scissor Kicks",
+  "Russian Twists with Medicine Ball",
+
+  "Standing Calf Raises",
+  "Good Mornings",
+  "Renegade Rows",
+  "Jumping Bulgarian Split Squats",
+  "Barbell Bent Over Rows",
+  "Jumping Rope",
+  "Frog Jumps",
+  "Skater Lunges",
+  "Diamond Push-ups",
+  "Roman Chair Leg Raises",
+  "Sit-up Punches",
+  "Mountain Climber Twists",
+  "Pike Push-ups",
+  "Glute Ham Raises",
+  "Incline Dumbbell Flyes",
+
+  "Sumo Squat Pulses",
+  "Medicine Ball Slams",
+  "Goblet Lunge",
+  "Reverse Flyes",
+  "Prone Cobra",
+  "Seated Russian Twists",
+  "Front Squats",
+  "Jumping Knee Tucks",
+  "Tricep Push-ups",
+  "Weighted Glute Bridges",
+  "Dumbbell Renegade Rows",
+  "Squat Jumps with Medicine Ball",
+  "Kettlebell Swings",
+
+
+  "Standing Calf Raises with Dumbbells",
+  "Seated Cable Rows",
+  "Fire Hydrant Kicks",
+  "Plank Up-Downs",
+  "Russian Twists with Dumbbell",
+
+  "Jump Squats with Medicine Ball",
+  "Renegade Rows with Push-ups",
+  "Medicine Ball Russian Twists",
+  "Lateral Box Jumps",
+  "Sumo Squat Hold",
+  "Medicine Ball Push-ups",
+  "Glute Bridge Marches",
+  "Dumbbell Bent Over Reverse Flyes",
+  "Burpee Box Jumps",
+  "Medicine Ball Sit-ups",
+  "V-sit Twists",
+
+  "Jumping Lunge with Dumbbells",
+  "Russian Twists with Kettlebell",
+  "Squat Jacks",
+  "Box Squats",
+  "Reverse Plank",
+  "Weighted Bicycle Crunches",
+  "Lying Leg Raises",
+  "Box Jump Overs",
+  "Dumbbell Renegade Rows with Push-ups",
+  "Woodchoppers",
+  "Lateral Lunge Jumps",
+  "Jumping Jacks +Slam",
+
+  "Cross Jacks",
+  "Broad Jumps",
+  "Lunge+Uppercut",
+  "Slams + Burpee",
+  "Lateral Box Step-ups"];
+
+    var arregloA = activities_total; // Aquí debes proporcionar los objetos del arreglo A
+
+    // Arreglo B para almacenar los objetos seleccionados al azar
+    var arregloB = [];
+
+    // Generar 30 índices únicos al azar dentro del rango de arregloA
+    var indicesAleatorios = [];
+        while (indicesAleatorios.length < 30) {
+        var indice = Math.floor(Math.random() * arregloA.length);
+        if (!indicesAleatorios.includes(indice)) {
+            indicesAleatorios.push(indice);
+        }
+     }
+
+    // Seleccionar los objetos correspondientes a los índices aleatorios y agregarlos a arregloB
+    for (var i = 0; i < indicesAleatorios.length; i++) {
+        var indice = indicesAleatorios[i];
+        arregloB.push(arregloA[indice]);
+    }
+
+    const activities = arregloB;
+    const cycleTime = 45; // Duración del ciclo en segundos
+    const breakTime = 15; // Duración del descanso en segundos
+
+    // Variables globales
+    let timerInterval;
+    let remainingTime;
+    let currentCycle = 0;
+    let isPaused = true;
+
+    // Función para iniciar o pausar el timer
+    function toggleTimer() {
+      if (isPaused) {
+        startTimer();
+        isPaused = false;
+        document.getElementById('playPauseButton').textContent = 'Pause';
+      } else {
+        pauseTimer();
+        isPaused = true;
+        document.getElementById('playPauseButton').textContent = 'Play';
+      }
+    }
+
+    // Función para iniciar el timer
+    function startTimer() {
+      if (timerInterval) return; // El timer ya está en marcha
+
+      if (remainingTime === undefined) {
+        // Iniciar desde el principio
+        currentCycle = 0;
+        remainingTime = cycleTime;
+        updateActivity();
+      }
+
+      timerInterval = setInterval(() => {
+        remainingTime--;
+        if (remainingTime < 0) {
+          currentCycle++;
+          if (currentCycle % 2 === 0) {
+            remainingTime = cycleTime; // Tiempo de ciclo
+          } else {
+            remainingTime = breakTime; // Tiempo de entre tiempo
+          }
+          updateActivity();
+        }
+        updateTimer();
+      }, 1000);
+    }
+
+    // Función para pausar el timer
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    // Función para actualizar el contador del timer
+    function updateTimer() {
+      const minutes = Math.floor(remainingTime / 60).toString().padStart(2, '0');
+      const seconds = (remainingTime % 60).toString().padStart(2, '0');
+      document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+    }
+
+    // Función para actualizar la actividad actual
+    function updateActivity() {
+      const activityIndex = Math.floor(currentCycle / 2) % activities.length;
+      const activity = activities[activityIndex];
+      const activity_next = activities[activityIndex+1];
+      if (currentCycle % 2 === 0) {
+        document.getElementById('activity').textContent = activity;
+        document.getElementById('activity_next').textContent = "NEXT: "+activity_next;
+      } else {
+        document.getElementById('activity').textContent = 'Rest';
+      }
+    }
+
+    // Evento click del botón "Play/Pause"
+    document.getElementById('playPauseButton').addEventListener('click', toggleTimer);
+  </script>
+</body>
+</html>
+
